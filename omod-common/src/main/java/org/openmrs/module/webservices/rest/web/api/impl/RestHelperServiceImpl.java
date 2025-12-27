@@ -1,10 +1,18 @@
+/**
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
 package org.openmrs.module.webservices.rest.web.api.impl;
 
 import org.hibernate.CacheMode;
 import org.hibernate.Session;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
-import org.openmrs.api.db.hibernate.DbSession;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.webservices.rest.web.api.RestHelperService;
@@ -54,29 +62,29 @@ public class RestHelperServiceImpl extends BaseOpenmrsService implements RestHel
         return results.isEmpty() ? null : results.get(0);
     }
     
-    private DbSession getSession() {
-        if (method == null) {
-            try {
-                return sessionFactory.getCurrentSession();
-            }
-            catch (NoSuchMethodError error) {
-                //Supports Hibernate 3 by casting org.hibernate.classic.Session to org.hibernate.Session
-                try {
-                    method = sessionFactory.getClass().getMethod("getCurrentSession");
-                    return (DbSession) method.invoke(sessionFactory);
-                }
-                catch (Exception e) {
-                    throw new IllegalStateException(e);
-                }
-            }
-        } else {
-            try {
-                return (DbSession) method.invoke(sessionFactory);
-            }
-            catch (Exception e) {
-                throw new IllegalStateException(e);
-            }
-        }
+    private Session getSession() {
+        // if (method == null) {
+        //     try {
+                return (Session) sessionFactory.getCurrentSession();
+        //     }
+        //     catch (NoSuchMethodError error) {
+        //         //Supports Hibernate 3 by casting org.hibernate.classic.Session to org.hibernate.Session
+        //         try {
+        //             method = sessionFactory.getClass().getMethod("getCurrentSession");
+        //             return (DbSession) method.invoke(sessionFactory);
+        //         }
+        //         catch (Exception e) {
+        //             throw new IllegalStateException(e);
+        //         }
+        //     }
+        // } else {
+        //     try {
+        //         return (DbSession) method.invoke(sessionFactory);
+        //     }
+        //     catch (Exception e) {
+        //         throw new IllegalStateException(e);
+        //     }
+        // }
     }
     
     /**
@@ -153,6 +161,22 @@ public class RestHelperServiceImpl extends BaseOpenmrsService implements RestHel
         
         return session.createQuery(cq).getResultList();
     }
-
+	/**
+	 * @see RestHelperService#getRegisteredSearchHandlers()
+	 */
+	@Override
+	public List<SearchHandler> getRegisteredSearchHandlers() {
+		final List<SearchHandler> result = Context.getRegisteredComponents(SearchHandler.class);
+		return result != null ? result : new ArrayList<SearchHandler>();
+	}
+	
+	/**
+	 * @see RestHelperService#getRegisteredRegisteredSubclassHandlers()
+	 */
+	@Override
+	public List<DelegatingSubclassHandler> getRegisteredRegisteredSubclassHandlers() {
+		final List<DelegatingSubclassHandler> result = getRegisteredComponents(DelegatingSubclassHandler.class);
+		return result != null ? result : new ArrayList<DelegatingSubclassHandler>();
+	}
 	
 }

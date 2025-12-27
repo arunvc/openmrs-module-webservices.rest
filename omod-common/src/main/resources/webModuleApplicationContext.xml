@@ -87,7 +87,6 @@
     
     <bean id="stringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter" />
     <bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver">
-      <property name="maxUploadSize" value="10485760"/>
     </bean>
 
 	<!-- Cannot do this, breaks all property editors from trunk...
