@@ -154,21 +154,5 @@ public class RestHelperServiceImpl extends BaseOpenmrsService implements RestHel
         return session.createQuery(cq).getResultList();
     }
 
-	/**
-	 * @see RestHelperService#getRegisteredSearchHandlers()
-	 */
-	@Override
-	public List<SearchHandler> getRegisteredSearchHandlers() {
-		final List<SearchHandler> result = Context.getRegisteredComponents(SearchHandler.class);
-		return result != null ? result : new ArrayList<SearchHandler>();
-	}
 	
-	/**
-	 * @see RestHelperService#getRegisteredRegisteredSubclassHandlers()
-	 */
-	@Override
-	public List<DelegatingSubclassHandler> getRegisteredRegisteredSubclassHandlers() {
-		final List<DelegatingSubclassHandler> result = getRegisteredComponents(DelegatingSubclassHandler.class);
-		return result != null ? result : new ArrayList<DelegatingSubclassHandler>();
-	}
 }
